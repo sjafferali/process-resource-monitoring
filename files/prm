@@ -159,10 +159,10 @@ get_pslist() {
                 chmod 640 $IGNORE_PSLIST
         fi
         if [ "$IGNORE_ROOT" == "1" ]; then
-                $nice -n 19 /bin/ps --no-headers --user root -N -o "ppid pid user pcpu pmem rss etime nice comm cmd" --sort comm | grep -vwf $IGNORE_PSLIST > $PSLIST_CACHE
-                $nice -n 19 /bin/ps --no-headers -A -o "ppid pid user pcpu pmem rss etime nice comm cmd" --sort comm > $PSLIST_CACHE.full
+                $nice -n 19 /bin/ps --no-headers --user root -N -o "ppid pid user:32 pcpu pmem rss etime nice comm cmd" --sort comm | grep -vwf $IGNORE_PSLIST > $PSLIST_CACHE
+                $nice -n 19 /bin/ps --no-headers -A -o "ppid pid user:32 pcpu pmem rss etime nice comm cmd" --sort comm > $PSLIST_CACHE.full
         else
-                $nice -n 19 /bin/ps --no-headers -A -o "ppid pid user pcpu pmem rss etime nice comm cmd" --sort comm > $PSLIST_CACHE.full
+                $nice -n 19 /bin/ps --no-headers -A -o "ppid pid user:32 pcpu pmem rss etime nice comm cmd" --sort comm > $PSLIST_CACHE.full
                 cat $PSLIST_CACHE.full | grep -vwf $IGNORE_PSLIST > $PSLIST_CACHE
         fi
 }
@@ -543,7 +543,7 @@ prmtop() {
                 echo
          fi
          echo "CPU% MEM% PID USER CMD" | tr ' ' '\t' ;
-         $nice -n 19 /bin/ps --no-headers -A -o "ppid pid user pcpu pmem rss etime comm cmd" --sort comm | awk '{print$4"\t"$5"\t"$2"\t"$3"\t"$9}' | sort -n -t$'\t' -k2,1 | tail -n$procs | tac
+         $nice -n 19 /bin/ps --no-headers -A -o "ppid pid user:32 pcpu pmem rss etime comm cmd" --sort comm | awk '{print$4"\t"$5"\t"$2"\t"$3"\t"$9}' | sort -n -t$'\t' -k2,1 | tail -n$procs | tac
          if [ -z "$watch" ]; then
                 exit
          fi
